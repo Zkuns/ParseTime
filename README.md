@@ -1,24 +1,20 @@
-# README
+##目标：
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+设计一个模型 User，该模型有一个字段 birthday 用于接受用户在表单中输入的生日（格式类似：10-01-1987），并保存到数据库。为了适应国际化需求，birthday 字段保存的日期需要设计为可配置，以能够输入输出多种日期格式。
 
-Things you may want to cover:
+##细节：
 
-* Ruby version
+1. 要有一个配置文件，其中有 birthday_format 一项，用于进行日期格式配置（配置文件需要随App启动加载）
+2. 需要兼容如下格式的日期：
 
-* System dependencies
+	1. big-endian（年-月-日） -> 2016-10-27
+	2. little-endian（日-月-年） -> 27-10-2016
+	3. middle-endian（月-日-年） -> 10-27-2016
 
-* Configuration
+3. 年份，接受2-4个数字，如果年份为2位数，视为2000 + n，例如 13 -> 2013
+日期和月份，可接受前导0，例如 03-21
 
-* Database creation
+4. 需要考虑兼容的日期时间分隔符为：横线（-）、斜杠（/）、点（.）以及空格
+5. 将用户输入的日期格式化为Rails的Date类型后，保存进 birthday 字段
+6. 加分项：考虑兼容识别中文日期格式，如 2016年10月27日、二零一六年十月二十七日。有测试用例覆盖。
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
