@@ -46,14 +46,14 @@ module TimeFormatable
 
   # 是否在合法范围内
   def valid_check year, month, day
-    year = year + 2000 if year.between?(0, 99)
-    raise TimeparseException unless year.between?(0, 9999) && month.between?(1, 12) && day.between?(1, 31)
+    year = year + 2000 if year.in?(0..99)
+    raise TimeparseException unless year.in?(0..9999) && month.in?(1..12) && day.in?(1..31)
     return year, month, day
   end
 
   # 取出中文的年月日
   def parse_chinese_date time
-    number_array = time.split(/[年,月,号]/)
+    number_array = time.split(/[年月日号]/)
     raise TimeparseException if number_array.length != 3
     get_date_from_chinese number_array
   end
@@ -67,14 +67,11 @@ module TimeFormatable
 
   # 解析中文数字，百以下
   def parse_chinese_number number_str
-    if number_str.include?('十')
-      left, right = number_str.match(/(.*)十(.*)/)[1..2]
-      left = replace_number(left.blank? ? '一' : left)
-      right = replace_number(right)
-      left * 10 + right
-    else
-      replace_number(number_str)
-    end
+    return replace_number(number_str) unless number_str.include?('十')
+    left, right = number_str.match(/(.*)十(.*)/)[1..2]
+    left = replace_number(left.blank? ? '一' : left)
+    right = replace_number(right)
+    left * 10 + right
   end
 
   # 将中文直接转换为阿拉伯数字
